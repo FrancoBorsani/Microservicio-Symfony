@@ -30,5 +30,9 @@ class NumeroRepository extends GenericRepository
 
     }
 
+    public function __toString(){
+        return '--';
+    }
+
  
 }

@@ -35,7 +35,7 @@ class NumeroController extends AbstractController
 
         $numeroRepository->saveNumero($numero);
 
-        return new JsonResponse(['status' => 'Número guardado!'], Response::HTTP_CREATED);
+        return new JsonResponse(['status' => 'Numero guardado!'], Response::HTTP_CREATED);
     }
 
 }
