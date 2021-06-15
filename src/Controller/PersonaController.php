@@ -1,94 +1,115 @@
 <?php
-
 namespace App\Controller;
-
-use App\Entity\Persona;
-use App\Form\PersonaType;
 use App\Repository\PersonaRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Persona;
+
 
 /**
- * @Route("/persona")
+ * @Route("/api")
  */
 class PersonaController extends AbstractController
 {
-    /**
-     * @Route("/", name="persona_index", methods={"GET"})
-     */
-    public function index(PersonaRepository $personaRepository): Response
+    private $PersonaRepository;
+
+    public function __construct(PersonaRepository $PersonaRepository)
     {
-        return $this->render('persona/index.html.twig', [
-            'personas' => $personaRepository->findAll(),
-        ]);
+        $this->PersonaRepository = $PersonaRepository;
     }
 
     /**
-     * @Route("/new", name="persona_new", methods={"GET","POST"})
+     * @Route("/person", name="add_person", methods={"POST"})
      */
-    public function new(Request $request): Response
+    public function add(Request $request): JsonResponse
     {
-        $persona = new Persona();
-        $form = $this->createForm(PersonaType::class, $persona);
-        $form->handleRequest($request);
+        $data = json_decode($request->getContent(), true);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($persona);
-            $entityManager->flush();
+        $name = $data['nombre'];
+        $lastname = $data['apellido'];
 
-            return $this->redirectToRoute('persona_index');
+        if (empty($name) || empty($lastname)) {
+            throw new NotFoundHttpException('Expecting mandatory parameters!');
         }
 
-        return $this->render('persona/new.html.twig', [
-            'persona' => $persona,
-            'form' => $form->createView(),
-        ]);
+        $PersonaRepository = $this->getDoctrine()->getRepository(Persona::class);
+
+    //    $entityManager = $this->getDoctrine()->getManager();
+     //   $entityManager->persist($persona);
+    //    $entityManager->flush();
+
+
+        $PersonaRepository->savePerson($name, $lastname);
+
+        return new JsonResponse(['status' => 'Person created!'], Response::HTTP_CREATED);
     }
 
     /**
-     * @Route("/{id}", name="persona_show", methods={"GET"})
+     * @Route("person/{id}", name="get_one_person", methods={"GET"})
      */
-    public function show(Persona $persona): Response
+    public function get($id): JsonResponse
     {
-        return $this->render('persona/show.html.twig', [
-            'persona' => $persona,
-        ]);
+        $person = $this->PersonaRepository->findOneBy(['id' => $id]);
+
+        $data = [
+            'id' => $person->getId(),
+            'nombre' => $person->getNombre(),
+            'apellido' => $person->getApellido(),
+        ];
+
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     /**
-     * @Route("/{id}/edit", name="persona_edit", methods={"GET","POST"})
+     * @Route("persons", name="get_all_persons", methods={"GET"})
      */
-    public function edit(Request $request, Persona $persona): Response
+    public function getAll(): JsonResponse
     {
-        $form = $this->createForm(PersonaType::class, $persona);
-        $form->handleRequest($request);
+        $persons = $this->PersonaRepository->findAll();
+        $data = [];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('persona_index');
+        foreach ($persons as $person) {
+            $data[] = [
+                'id' => $person->getId(),
+                'nombre' => $person->getNombre(),
+                'apellido' => $person->getApellido(),
+            ];
         }
 
-        return $this->render('persona/edit.html.twig', [
-            'persona' => $persona,
-            'form' => $form->createView(),
-        ]);
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     /**
-     * @Route("/{id}", name="persona_delete", methods={"POST"})
+     * @Route("person/{id}", name="update_person", methods={"PUT"})
      */
-    public function delete(Request $request, Persona $persona): Response
+    public function update($id, Request $request): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$persona->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($persona);
-            $entityManager->flush();
-        }
+        $person = $this->PersonaRepository->findOneBy(['id' => $id]);
+        $data = json_decode($request->getContent(), true);
 
-        return $this->redirectToRoute('persona_index');
+        empty($data['nombre']) ? true : $person->setName($data['nombre']);
+        empty($data['apellido']) ? true : $person->setType($data['apellido']);
+
+        $updatedPerson = $this->PersonaRepository->updatePerson($person);
+
+		return new JsonResponse(['status' => 'Person updated!'], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("person/{id}", name="delete_person", methods={"DELETE"})
+     */
+    public function delete($id): JsonResponse
+    {
+        $person = $this->PersonaRepository->findOneBy(['id' => $id]);
+
+        $this->PersonaRepository->removePerso($person);
+
+        return new JsonResponse(['status' => 'Person deleted'], Response::HTTP_OK);
     }
 }
+
+?>

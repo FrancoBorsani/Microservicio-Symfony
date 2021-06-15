@@ -4,47 +4,47 @@ namespace App\Repository;
 
 use App\Entity\Persona;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\GenericRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method Persona|null find($id, $lockMode = null, $lockVersion = null)
- * @method Persona|null findOneBy(array $criteria, array $orderBy = null)
- * @method Persona[]    findAll()
- * @method Persona[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class PersonaRepository extends ServiceEntityRepository
+
+class PersonaRepository extends GenericRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Persona::class);
     }
 
-    // /**
-    //  * @return Persona[] Returns an array of Persona objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Persona
+    public function savePerson($nombre, $apellido)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $newPerson = new Persona();
+
+        $newPerson
+            ->setNombre($nombre)
+            ->setApellido($apellido);
+
+        $this->getEntityManagerPersona()->persist($newPerson);
+        $this->getEntityManagerPersona()->flush();
+
     }
-    */
+
+    public function updatePerson(Persona $person): Persona
+    {
+        $this->manager->persist($person);
+        $this->manager->flush();
+
+        return $person;
+    }
+
+
+    public function removePerson(Persona $person)
+    {
+        $this->manager->remove($person);
+        $this->manager->flush();
+    }
+
+ 
 }
