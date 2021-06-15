@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Repository;
+namespace App\PersonaApp\Repository;
 
-use App\Entity\Persona;
+use App\PersonaApp\Entity\Persona;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\GenericRepository;
+use App\GenericRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 

@@ -4,5 +4,11 @@
 
 add:
     path: /api/person
-    controller: App\Controller\PersonaController::add
+    controller: App\PersonaApp\Controller\PersonaController::add
+    methods: POST
+
+
+addNumero:
+    path: /apiService/numero
+    controller: App\ServiceApp\Controller\NumeroController::addNumero
     methods: POST

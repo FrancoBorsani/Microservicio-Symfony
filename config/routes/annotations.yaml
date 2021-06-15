@@ -1,5 +1,9 @@
 controllers:
-    resource: ../../src/Controller/
+    resource: ../../src/PersonaApp/Controller/
+    type: annotation
+
+service_controllers:
+    resource: ../../src/ServiceApp/Controller/
     type: annotation
 
 kernel:

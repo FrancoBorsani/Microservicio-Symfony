@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\PersonaApp\Entity;
 
-use App\Repository\PersonaRepository;
+use App\PersonaApp\Repository\PersonaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

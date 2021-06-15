@@ -1,13 +1,13 @@
 <?php
-namespace App\Controller;
-use App\Repository\PersonaRepository;
+namespace App\PersonaApp\Controller;
+use App\PersonaApp\Repository\PersonaRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Persona;
+use App\PersonaApp\Entity\Persona;
 
 
 /**
@@ -37,11 +37,6 @@ class PersonaController extends AbstractController
         }
 
         $PersonaRepository = $this->getDoctrine()->getRepository(Persona::class);
-
-    //    $entityManager = $this->getDoctrine()->getManager();
-     //   $entityManager->persist($persona);
-    //    $entityManager->flush();
-
 
         $PersonaRepository->savePerson($name, $lastname);
 
