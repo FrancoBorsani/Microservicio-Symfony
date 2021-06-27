@@ -1,26 +1,25 @@
 <?php
 
-namespace App\PersonaApp\Form;
+namespace App\ServiceApp\Form;
 
-use App\PersonaApp\Entity\Persona;
+use App\ServiceApp\Entity\Numero;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PersonaType extends AbstractType
+class NumeroType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nombre')
-            ->add('apellido')
+            ->add('numero')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Persona::class,
+            'data_class' => Numero::class,
         ]);
     }
 }

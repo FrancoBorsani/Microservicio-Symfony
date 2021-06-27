@@ -2,7 +2,7 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-add:
-    path: /api/person
-    controller: App\PersonaApp\Controller\PersonaController::add
+addNumero:
+    path: /apiService/numero
+    controller: App\ServiceApp\Controller\NumeroController::addNumero
     methods: POST

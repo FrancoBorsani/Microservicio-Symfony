@@ -10,9 +10,9 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
         mappings:
-            App:
+            ServiceApp:
                 is_bundle: false
                 type: annotation
-                dir: '%kernel.project_dir%/src/PersonaApp/Entity'
-                prefix: 'App\PersonaApp\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/ServiceApp/Entity'
+                prefix: 'App\ServiceApp\Entity'
+                alias: ServiceApp
