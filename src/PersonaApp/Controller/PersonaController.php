@@ -8,8 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\PersonaApp\Entity\Persona;
-use Symfony\Component\HttpClient;
-use GuzzleHttp\Client;
+
 
 /**
  * @Route("/api")
@@ -37,9 +36,9 @@ class PersonaController extends AbstractController
             throw new NotFoundHttpException('Expecting mandatory parameters!');
         }
 
-        //ENVÍA PETICIÓN AL OTRO PROYECTO
-        $cmd = 'curl -X POST -H "Content-Type: application/json" http://localhost:8001/apiService/numero -d "{\"numero\":\"10\"}"';
-        $result = shell_exec($cmd);
+        $curl = 'curl -X POST -H "Content-Type: application/json" http://localhost:8001/apiService/numero -d "{\"numero\":\"10\"}"';
+        $result = shell_exec($curl);
+
 
         $PersonaRepository = $this->getDoctrine()->getRepository(Persona::class);
 
